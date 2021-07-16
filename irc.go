@@ -5,33 +5,41 @@ import (
 )
 
 type IrcClient struct {
-	ServerUri string
 	Conn net.Conn
-}
-
-// Assign values to the Irc Client (constructor)
-func (i *IrcClient) setProps(serverUri string) {
-	i.ServerUri = serverUri
+	Config
 }
 
 // Connect to the IRC server over tcp
-func (i *IrcClient) connect() {
-	log("connectIRC - connecting to " + i.ServerUri)
+func (i *IrcClient) Connect() {
+	log("IRC connect - connecting to " + i.IrcUri)
 	
-	Conn, err := net.Dial("tcp", i.ServerUri)
+	Conn, err := net.Dial("tcp", i.IrcUri)
 
 	if err != nil {
-		log("connectIRC - error connecting to " + i.ServerUri);
+		log("IRC connect - error connecting to " + i.IrcUri)
 		log(err.Error())
 		return 
 	}
 
-	log("connectIRC - connection successful to " + i.ServerUri);
+	log("IRC connect - connection successful to " + i.IrcUri)
 	i.Conn = Conn
 }
 
+func (i *IrcClient) Login() {
+	log("IRC login - logging into IRC as " + i.Nickname)
+	i.Conn.Write([]byte("PASS "+i.OauthToken+"/r/n"))
+	i.Conn.Write([]byte("NICK "+i.Nickname+"/r/n"))
+
+	// if err != nil {
+	// 	log(err.Error())
+	// 	return 
+	// }
+
+	log("IRC login - log in successful as " + i.Nickname)
+}
+
 // Disconnect from the IRC server
-func (i *IrcClient) disconnect() {
+func (i *IrcClient) Disconnect() {
 	i.Conn.Close()
-	log("disconnectIRC - connection closed to " + i.ServerUri);
+	log("disconnectIRC - connection closed to " + i.IrcUri)
 } 

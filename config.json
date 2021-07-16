@@ -1,3 +1,5 @@
 {
-  "oauthToken": "oauth:j0pc6yfmkmnze7ljt4mkltkg4phkbw"
+  "IrcUri": "irc.chat.twitch.tv:6697",
+  "Nickname": "dustinbrink_bot",
+  "OauthToken": "oauth:okbwwhxmtsj50d9izhy6icoiub2vxw"
 }

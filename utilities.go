@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 )
 
@@ -10,3 +11,8 @@ func log(s string) {
 }
 
 
+func exitError(s string, err error) {
+	log(s)
+	log(err.Error())
+	os.Exit(1)
+}
