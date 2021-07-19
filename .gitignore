@@ -4,6 +4,10 @@
 *.dll
 *.so
 *.dylib
+*.cer
+*.key
+*.pfx
+*.pem
 
 # Test binary, built with `go test -c`
 *.test

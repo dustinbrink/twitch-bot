@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"crypto/tls"
 	"net"
 	"net/textproto"
 	"strings"
@@ -24,7 +25,15 @@ func (i *IrcClient) Connect(uri string) {
 	log("IRC connect - connecting to " + uri)
 	
 	var err error
-	i.Conn, err = net.Dial("tcp", uri)
+	cert, err := tls.LoadX509KeyPair("./publickey.cer", "./private.key")
+	if err != nil {
+		log("IRC connect - error loading X509 Key Pair")
+		log(err.Error())
+		return
+	}
+
+  config := tls.Config{Certificates: []tls.Certificate{cert}, InsecureSkipVerify: true}
+	i.Conn, err = tls.Dial("tcp", uri, &config)
 
 	if err != nil {
 		log("IRC connect - error connecting to " + uri)

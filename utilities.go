@@ -16,13 +16,3 @@ func exitError(s string, err error) {
 	os.Exit(1)
 }
 
-// func https() (*http.Client){
-// 	c := &http.Client{
-// 		Transport: &http.Transport{
-// 				TLSClientConfig: &tls.Config{
-// 						InsecureSkipVerify: true,
-// 				},
-// 		},
-// 	}
-// 	return c
-// }
