@@ -11,6 +11,8 @@ import (
 
 type IrcClient struct {
 	Conn net.Conn
+	Outgoing chan []byte
+	Incoming chan *IrcMessage
 }
 
 type IrcMessage struct {
@@ -23,6 +25,9 @@ type IrcMessage struct {
 // Connect to the IRC server over tcp
 func (i *IrcClient) Connect(uri string, sslCert string, sslKey string) {
 	log("IRC connect - connecting to " + uri)
+
+	i.Outgoing = make(chan []byte, 100)
+	i.Incoming = make(chan *IrcMessage, 100)
 	
 	var err error
 	cert, err := tls.LoadX509KeyPair(sslCert, sslKey)
@@ -75,8 +80,9 @@ func (i *IrcClient) Disconnect() {
 }
 
 // Continually read next line from IRC connection and send it to msgHandler()
-func (i *IrcClient) WatchChat(msgHandler func(msg IrcMessage)) {
+func (i *IrcClient) WatchChat(msgHandler func(msg *IrcMessage)) {
 	log("IRC watch chat - watching chat")
+
 	tp := textproto.NewReader((bufio.NewReader(i.Conn)));
 
 	for {
@@ -89,23 +95,41 @@ func (i *IrcClient) WatchChat(msgHandler func(msg IrcMessage)) {
 			break
 		}
 
-		log(line)
-		msgHandler(ParseMsg(line));
+		// coroutine respond to incoming message
+		go func() {
+			msgHandler(<-i.Incoming)
+		}()
 
+		// log it
+		log(line)
+
+		// store message in channel
+		i.Incoming <- ParseMsg(line);
+
+		// Don't know if sleeping is needed but feel better with it
 		time.Sleep(200 * time.Millisecond)
 	}
+
+	i.Disconnect()
 }
 
 // Helper to format IRC commands correctly
 func (i *IrcClient) WriteCommand(command string) {
-	i.Conn.Write([]byte(command+"\r\n"))
+	// coroutine to write new command with delay
+	go func() {
+		i.Conn.Write(<-i.Outgoing)
+		time.Sleep(time.Duration(20/30) * time.Millisecond)
+	}()
+
+	// store message in channel
+	i.Outgoing <- []byte(command+"\r\n")
 }
 
 // Parse the irc read line into a Message struct
 // Lots more to add here, this is not to spec
 // but good enough for my usecase 
-func ParseMsg(line string) (m IrcMessage) {
-	m = IrcMessage{}
+func ParseMsg(line string) (m *IrcMessage) {
+	m = &IrcMessage{}
 	line = strings.TrimRight(line, "\r\n")
 
 	if line[0] == ':' {
@@ -122,12 +146,10 @@ func ParseMsg(line string) (m IrcMessage) {
 
 	fields := strings.Fields(line)
 	m.Command = fields[0]
-	m.To = fields[1]
-	
-	// For debug
-	// log("Command="+m.Command)
-	// log("To="+m.To)
-	// log("Content="+m.Content)
+
+	if len(fields) > 1 {
+		m.To = fields[1]
+	}
 
 	return m
 }

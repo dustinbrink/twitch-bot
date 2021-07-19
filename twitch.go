@@ -8,7 +8,7 @@ type Twitch struct {
 
 // start the connection with IRC server
 func (t *Twitch) Start() {
-	t.irc = IrcClient{nil}
+	t.irc = IrcClient{}
 	t.irc.Connect(t.Config.IrcUri, t.Config.SslCertPath, t.Config.SslKeyPath)
 	t.irc.Login(t.Config.Nickname, t.Config.OauthToken)
 	t.irc.JoinChannel(t.Config.IrcChannel)
@@ -23,7 +23,7 @@ func (t *Twitch) Stop() {
 }
 
 // Callback to handle received IRC messages
-func (t *Twitch) HandleMsg(msg IrcMessage) {
+func (t *Twitch) HandleMsg(msg *IrcMessage) {
 	switch msg.Command {
 		case "PING":
 			// Ping-pong keep alive
@@ -43,7 +43,7 @@ func (t *Twitch) HandleMsg(msg IrcMessage) {
 }
 
 // Respond to actual bot commands that start with a !
-func (t *Twitch) HandleCommands(msg IrcMessage) {
+func (t *Twitch) HandleCommands(msg *IrcMessage) {
 	switch msg.Content {
 	case "!swanson":
 		  // fetch & say new swanson quote 
