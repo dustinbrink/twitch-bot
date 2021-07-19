@@ -2,6 +2,13 @@
 
 A Twitch.tv Chat Bot
 
+## Commands
+
+- build
+  -- $go build
+- develop
+  -- $air
+
 ## Overview
 
 ---

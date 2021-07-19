@@ -11,21 +11,24 @@ type Config struct {
 	IrcUri string
 	Nickname string
 	OauthToken string
+	IrcChannel string
+	IrcRate time.Duration
 }
 
 func main() {
 	log("Starting Twitch Bot")
-
-	config := loadConfig("./config.json")
-
-	irc := IrcClient{nil, config}
-	// irc.Props(config)
-	irc.Connect()
-	irc.Login()
-	time.Sleep(time.Second*10)
-	irc.Disconnect()
+	twitch := Twitch{Config: loadConfig("./config.json")}
+	twitch.Start()
+	time.Sleep(time.Second*300)
+	twitch.Stop()
 }
 
+// Read local file config.json for settings
+// Expected
+//    IrcUri string
+//	  Nickname string
+//	  OauthToken string
+//  	IrcChannel string
 func loadConfig(filename string) Config {
 	log("loadConfig - loading config file from "+filename)
 
