@@ -13,6 +13,7 @@ type IrcClient struct {
 	Conn net.Conn
 	Outgoing chan []byte
 	Incoming chan *IrcMessage
+	Connected bool
 }
 
 type IrcMessage struct {
@@ -46,6 +47,8 @@ func (i *IrcClient) Connect(uri string, sslCert string, sslKey string) {
 		return 
 	}
 
+	i.Connected = true
+
 	log("IRC connect - connection successful to " + uri + " " + i.Conn.RemoteAddr().String())
 }
 
@@ -75,6 +78,7 @@ func (i *IrcClient) LeaveChannel(channelName string) {
 // Disconnect from the IRC server
 func (i *IrcClient) Disconnect() {
 	var connIp = i.Conn.RemoteAddr().String()
+	i.Connected = false
 	i.Conn.Close()
 	log("disconnectIRC - connection closed to " + connIp)
 }
@@ -85,7 +89,7 @@ func (i *IrcClient) WatchChat(msgHandler func(msg *IrcMessage)) {
 
 	tp := textproto.NewReader((bufio.NewReader(i.Conn)));
 
-	for {
+	for i.Connected {
 		line, err := tp.ReadLine()
 
 		if err != nil {

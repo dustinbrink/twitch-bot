@@ -1,5 +1,10 @@
 package main
 
+import (
+	"os"
+	"time"
+)
+
 // hold the configs and irc client
 type Twitch struct {
 	irc IrcClient
@@ -18,7 +23,9 @@ func (t *Twitch) Start() {
 
 // Disconnect from IRC server
 func (t *Twitch) Stop() {
+	defer os.Exit(0)
 	t.Say("Bye Chat, dustinbrink_bot disconnected.")
+	time.Sleep(200 * time.Millisecond)
 	t.irc.Disconnect()
 }
 
