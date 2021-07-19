@@ -12,6 +12,8 @@ type Config struct {
 	OauthToken string
 	IrcChannel string
 	SwansonUri string
+	SslCertPath string
+	SslKeyPath string
 }
 
 var SWANSON_URI string

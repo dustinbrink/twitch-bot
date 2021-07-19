@@ -9,7 +9,7 @@ type Twitch struct {
 // start the connection with IRC server
 func (t *Twitch) Start() {
 	t.irc = IrcClient{nil}
-	t.irc.Connect(t.Config.IrcUri)
+	t.irc.Connect(t.Config.IrcUri, t.Config.SslCertPath, t.Config.SslKeyPath)
 	t.irc.Login(t.Config.Nickname, t.Config.OauthToken)
 	t.irc.JoinChannel(t.Config.IrcChannel)
 	t.irc.WatchChat(t.HandleMsg)

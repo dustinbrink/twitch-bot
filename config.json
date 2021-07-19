@@ -3,5 +3,7 @@
   "Nickname": "dustinbrink_bot",
   "OauthToken": "oauth:ocflbr4q26izf6rxe1lxfbcwtpwb0n",
   "IrcChannel": "dustinbrink_bot",
-  "SwansonUri": "https://ron-swanson-quotes.herokuapp.com/v2/quotes"
+  "SwansonUri": "https://ron-swanson-quotes.herokuapp.com/v2/quotes",
+  "SslCertPath": "./publickey.cer",
+  "SslKeyPath": "./private.key"
 }

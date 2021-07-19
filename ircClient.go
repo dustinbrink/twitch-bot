@@ -21,11 +21,11 @@ type IrcMessage struct {
 }
 
 // Connect to the IRC server over tcp
-func (i *IrcClient) Connect(uri string) {
+func (i *IrcClient) Connect(uri string, sslCert string, sslKey string) {
 	log("IRC connect - connecting to " + uri)
 	
 	var err error
-	cert, err := tls.LoadX509KeyPair("./publickey.cer", "./private.key")
+	cert, err := tls.LoadX509KeyPair(sslCert, sslKey)
 	if err != nil {
 		log("IRC connect - error loading X509 Key Pair")
 		log(err.Error())
