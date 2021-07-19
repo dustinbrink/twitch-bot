@@ -2,12 +2,39 @@
 
 A Twitch.tv Chat Bot
 
-## Commands
+## Build and Run Commands
+
+---
 
 - build
   -- $go build
+- run
+  -- $./twitch-bot.exe
 - develop
   -- $air
+
+## Twitch Location
+
+---
+
+the Bot can be found running on Twitch under the name `dustinbrink_bot` at the Twitch channel [twitch.tv/dustinbrink_bot](https://www.twitch.tv/dustinbrink_bot)
+
+## Configuration
+
+---
+
+Configuration can be found in local file ./config.json
+The format is JSON and should contain these properties
+
+| Property    | Description                                                                                                                                         |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| IrcUri      | The Uri for the twitch service (in SSL) [current documentation](https://dev.twitch.tv/docs/irc/guide) says this should be "irc.chat.twitch.tv:6697" |
+| Nickname    | The IRC nickname the bot will use, should be all lowercase and same as twitch id                                                                    |
+| OauthToken  | Twitch.tv Open Auth Token for READ/EDIT CHAT, generate one [here](https://twitchapps.com/tmi/) (may need to be periodically updated)                |
+| IrcChannel  | The channel name you would like the bot to join                                                                                                     |
+| SwansonUri  | Uri path to the Ron Swanson API, that generates a Ron Swanson quote                                                                                 |
+| SslCertPath | Path to local file containing the ssl public key                                                                                                    |
+| SslKeyPath  | Path to local file containing the private ssl key                                                                                                   |
 
 ## Overview
 
