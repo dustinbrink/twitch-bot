@@ -92,17 +92,33 @@ func (i *IrcClient) WriteCommand(command string) {
 	i.Conn.Write([]byte(command+"\r\n"))
 }
 
-// Parse the Irc line into a Message struct
+// Parse the irc read line into a Message struct
+// Lots more to add here, this is not to spec
+// but good enough for my usecase 
 func ParseMsg(line string) (m IrcMessage) {
 	m = IrcMessage{}
 	line = strings.TrimRight(line, "\r\n")
 
-
 	if line[0] == ':' {
 		end := strings.Index(line, " ")
 		m.From = line[1:end]
-		line = line[end:]
+		line = line[end+1:]
 	}
+
+	contentStart := strings.Index(line, " :")
+	if contentStart > 0 {
+		m.Content = line[contentStart+2:]
+		line = line[:contentStart]
+	}
+
+	fields := strings.Fields(line)
+	m.Command = fields[0]
+	m.To = fields[1]
+	
+	// For debug
+	// log("Command="+m.Command)
+	// log("To="+m.To)
+	// log("Content="+m.Content)
 
 	return m
 }

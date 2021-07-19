@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	"time"
 )
 
 
@@ -12,15 +11,18 @@ type Config struct {
 	Nickname string
 	OauthToken string
 	IrcChannel string
-	IrcRate time.Duration
+	SwansonUri string
 }
 
+var SWANSON_URI string
+
+// entry point, start up Twitch Bot with local config.json
 func main() {
 	log("Starting Twitch Bot")
-	twitch := Twitch{Config: loadConfig("./config.json")}
+	config := loadConfig("./config.json")
+	SWANSON_URI = config.SwansonUri
+	twitch := Twitch{Config: config}
 	twitch.Start()
-	time.Sleep(time.Second*300)
-	twitch.Stop()
 }
 
 // Read local file config.json for settings

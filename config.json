@@ -3,5 +3,5 @@
   "Nickname": "dustinbrink_bot",
   "OauthToken": "oauth:buo76lplg8p4zb6awps901li361pkt",
   "IrcChannel": "dustinbrink_bot",
-  "IrcRate": 2000
+  "SwansonUri": "https://ron-swanson-quotes.herokuapp.com/v2/quotes"
 }
