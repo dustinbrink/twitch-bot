@@ -1,7 +1,7 @@
 {
   "IrcUri": "irc.chat.twitch.tv:6697",
   "Nickname": "dustinbrink_bot",
-  "OauthToken": "oauth:ocflbr4q26izf6rxe1lxfbcwtpwb0n",
+  "OauthToken": "oauth:utjjbwd2l2lj0rsqj0ao9k72mdsaan",
   "IrcChannel": "dustinbrink_bot",
   "SwansonUri": "https://ron-swanson-quotes.herokuapp.com/v2/quotes",
   "SslCertPath": "./publickey.cer",

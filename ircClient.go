@@ -77,10 +77,11 @@ func (i *IrcClient) LeaveChannel(channelName string) {
 
 // Disconnect from the IRC server
 func (i *IrcClient) Disconnect() {
-	var connIp = i.Conn.RemoteAddr().String()
 	i.Connected = false
-	i.Conn.Close()
-	log("disconnectIRC - connection closed to " + connIp)
+	if(i.Conn != nil) {
+		i.Conn.Close()
+	}
+	log("IRC disconnect - connection closed")
 }
 
 // Continually read next line from IRC connection and send it to msgHandler()
@@ -99,16 +100,11 @@ func (i *IrcClient) WatchChat(msgHandler func(msg *IrcMessage)) {
 			break
 		}
 
-		// coroutine respond to incoming message
-		go func() {
-			msgHandler(<-i.Incoming)
-		}()
-
-		// log it
+		// log msg
 		log(line)
 
-		// store message in channel
-		i.Incoming <- ParseMsg(line);
+		// callback to handle received message & parse msg
+		msgHandler(ParseMsg(line))
 
 		// Don't know if sleeping is needed but feel better with it
 		time.Sleep(200 * time.Millisecond)
@@ -121,7 +117,12 @@ func (i *IrcClient) WatchChat(msgHandler func(msg *IrcMessage)) {
 func (i *IrcClient) WriteCommand(command string) {
 	// coroutine to write new command with delay
 	go func() {
-		i.Conn.Write(<-i.Outgoing)
+		if(i.Connected) {
+			cmd := <- i.Outgoing
+			if(cmd != nil) {
+				i.Conn.Write(cmd)
+			}
+		}
 		time.Sleep(time.Duration(20/30) * time.Millisecond)
 	}()
 
