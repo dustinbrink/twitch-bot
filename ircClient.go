@@ -12,7 +12,6 @@ import (
 type IrcClient struct {
 	Conn net.Conn
 	Outgoing chan []byte
-	Incoming chan *IrcMessage
 	Connected bool
 }
 
@@ -28,7 +27,6 @@ func (i *IrcClient) Connect(uri string, sslCert string, sslKey string) {
 	log("IRC connect - connecting to " + uri)
 
 	i.Outgoing = make(chan []byte, 100)
-	i.Incoming = make(chan *IrcMessage, 100)
 	
 	var err error
 	cert, err := tls.LoadX509KeyPair(sslCert, sslKey)
